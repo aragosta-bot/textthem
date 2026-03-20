@@ -43,9 +43,9 @@ ZŁE przykłady (nigdy tak):
     }
 
     const context = [
-      input1 && `reakcja na ignorowanie: ${input1}`,
-      input2 && `oczekiwanie: ${input2}`,
-      input3 && `vibe: ${input3}`,
+      input1 && `czas związku: ${input1}`,
+      input2 && `aktualny vibe: ${input2}`,
+      input3 && `cel wiadomości: ${input3}`,
     ].filter(Boolean).join(' | ')
 
     const prompt = `${tierContext[tier as keyof typeof tierContext] || tierContext.soft}

@@ -148,6 +148,12 @@
       transform: translateY(-1px);
     }
     .btn-primary:active { transform: translateY(0); }
+    .btn-primary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
 
     .btn-secondary {
       background: var(--surface2);
@@ -518,6 +524,56 @@
       margin-top: 32px;
     }
 
+    /* ── CHIP SELECTORS ── */
+    .chip-group {
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 20px;
+    }
+
+    .chip-label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border-radius: 22px;
+      border: 1px solid #333;
+      background: var(--surface2);
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.18s;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .chip:hover {
+      filter: brightness(1.25);
+      color: var(--text);
+    }
+
+    .chip.selected {
+      border-color: #dc2626;
+      background: rgba(220, 38, 38, 0.15);
+      color: #fff;
+    }
+
     /* ── MOBILE TWEAKS ── */
     @media (max-width: 360px) {
       h1 { font-size: 2rem; }
@@ -570,46 +626,40 @@
 
   <h2>O kim piszemy? 😈</h2>
 
-  <div class="input-group">
-    <label class="input-label" for="input1">Jak on/ona reaguje gdy go/ją ignorujesz?</label>
-    <input
-      id="input1"
-      class="input-field"
-      type="text"
-      placeholder='np. "pisze 5 razy z rzędu"'
-      maxlength="120"
-      autocomplete="off"
-    >
+  <!-- Q1: czas związku (optional) -->
+  <div class="chip-group">
+    <span class="chip-label">Jak długo jesteście razem? <span class="optional-badge">(opcjonalne)</span></span>
+    <div class="chip-row" id="chips-q1">
+      <button class="chip" data-group="q1" data-value="Świeży związek" onclick="selectChip(this)">Świeży związek</button>
+      <button class="chip" data-group="q1" data-value="Kilka miesięcy" onclick="selectChip(this)">Kilka miesięcy</button>
+      <button class="chip" data-group="q1" data-value="Rok+" onclick="selectChip(this)">Rok+</button>
+      <button class="chip" data-group="q1" data-value="Długa historia" onclick="selectChip(this)">Długa historia</button>
+    </div>
   </div>
 
-  <div class="input-group">
-    <label class="input-label" for="input2">Czego najbardziej się od Ciebie spodziewa?</label>
-    <input
-      id="input2"
-      class="input-field"
-      type="text"
-      placeholder='np. "że pierwszy/a napiszę"'
-      maxlength="120"
-      autocomplete="off"
-    >
+  <!-- Q2: vibe (required) -->
+  <div class="chip-group">
+    <span class="chip-label">Jaki jest teraz vibe?</span>
+    <div class="chip-row" id="chips-q2">
+      <button class="chip" data-group="q2" data-value="Wszystko OK" onclick="selectChip(this)">Wszystko OK</button>
+      <button class="chip" data-group="q2" data-value="Lekkie napięcie" onclick="selectChip(this)">Lekkie napięcie</button>
+      <button class="chip" data-group="q2" data-value="Cisza" onclick="selectChip(this)">Cisza</button>
+      <button class="chip" data-group="q2" data-value="Tęsknię" onclick="selectChip(this)">Tęsknię</button>
+    </div>
   </div>
 
-  <div class="input-group">
-    <label class="input-label" for="input3">
-      Jedno słowo opisujące Wasz vibe
-      <span class="optional-badge">(opcjonalne)</span>
-    </label>
-    <input
-      id="input3"
-      class="input-field"
-      type="text"
-      placeholder='np. "chaos"'
-      maxlength="40"
-      autocomplete="off"
-    >
+  <!-- Q3: cel (required) -->
+  <div class="chip-group">
+    <span class="chip-label">Co chcesz osiągnąć?</span>
+    <div class="chip-row" id="chips-q3">
+      <button class="chip" data-group="q3" data-value="Zainteresować" onclick="selectChip(this)">Zainteresować</button>
+      <button class="chip" data-group="q3" data-value="Zdenerwować (trochę)" onclick="selectChip(this)">Zdenerwować (trochę)</button>
+      <button class="chip" data-group="q3" data-value="Rozbawić" onclick="selectChip(this)">Rozbawić</button>
+      <button class="chip" data-group="q3" data-value="Zaskoczyć" onclick="selectChip(this)">Zaskoczyć</button>
+    </div>
   </div>
 
-  <button class="btn btn-primary" onclick="generate()" style="margin-top:8px">
+  <button id="generate-btn" class="btn btn-primary" onclick="generate()" style="margin-top:8px" disabled>
     Daj mi wiadomość 😈
   </button>
 </section>
@@ -792,6 +842,22 @@ const MESSAGES = {
 // ── STATE ─────────────────────────────────────────
 let currentMsg = '';
 let softIndex = 0;
+const chipState = { q1: null, q2: null, q3: null };
+
+// ── CHIP LOGIC ────────────────────────────────────
+function selectChip(el) {
+  const group = el.dataset.group;
+  // Deselect siblings
+  document.querySelectorAll(`.chip[data-group="${group}"]`).forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  chipState[group] = el.dataset.value;
+  updateGenerateBtn();
+}
+
+function updateGenerateBtn() {
+  const btn = document.getElementById('generate-btn');
+  if (btn) btn.disabled = !(chipState.q2 && chipState.q3);
+}
 
 // ── NAVIGATION ────────────────────────────────────
 function goTo(screenName) {
@@ -802,9 +868,9 @@ function goTo(screenName) {
 
 // ── GENERATE ──────────────────────────────────────
 async function generate(tier = 'soft') {
-  const input1 = document.getElementById('input1').value
-  const input2 = document.getElementById('input2').value
-  const input3 = document.getElementById('input3').value
+  const input1 = chipState.q1 || 'nieznane'
+  const input2 = chipState.q2 || ''
+  const input3 = chipState.q3 || ''
 
   // Show result screen with loading state
   goTo('result');
@@ -898,9 +964,9 @@ async function generateTier(tier) {
   try {
     const SUPABASE_URL = 'https://arjmslnpxbxpxmyuoaot.supabase.co'
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFyam1zbG5weGJ4cHhteXVvYW90Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5OTU5ODAsImV4cCI6MjA4OTU3MTk4MH0.cMVyzL4MrXIz-6oDleraWbH6fVXYHi9luXcX7sAX_AA'
-    const input1 = document.getElementById('input1')?.value || ''
-    const input2 = document.getElementById('input2')?.value || ''
-    const input3 = document.getElementById('input3')?.value || ''
+    const input1 = chipState.q1 || 'nieznane'
+    const input2 = chipState.q2 || ''
+    const input3 = chipState.q3 || ''
     const res = await fetch(`${SUPABASE_URL}/functions/v1/generate-message`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
