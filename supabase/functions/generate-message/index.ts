@@ -46,7 +46,7 @@ Wiadomość powinna brzmieć jakby ją napisał ktoś kto NAPRAWDĘ zna tego par
 
 Napisz jedną wiadomość po polsku. Tylko wiadomość — bez cudzysłowów, bez wyjaśnień.`
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${openaiKey}`,
@@ -54,17 +54,16 @@ Napisz jedną wiadomość po polsku. Tylko wiadomość — bez cudzysłowów, be
       },
       body: JSON.stringify({
         model: "gpt-5.4-mini-2026-03-17",
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt }
-        ],
-        max_completion_tokens: 100,
+        instructions: systemPrompt,
+        input: prompt,
+        max_output_tokens: 100,
         temperature: 1.3,
+        store: false,
       }),
     })
 
     const data = await response.json()
-    const message = data.choices[0].message.content.trim()
+    const message = data.output_text?.trim() || data.output?.[0]?.content?.[0]?.text?.trim()
 
     return new Response(JSON.stringify({ message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
