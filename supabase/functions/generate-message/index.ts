@@ -38,7 +38,7 @@ Ważne: wiadomość powinna być po polsku, krótka, gotowa do wysłania.`
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: "gpt-5.4-mini",
+        model: "gpt-5.4-nano",
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 150,
         temperature: 0.9,
