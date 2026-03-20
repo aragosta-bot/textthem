@@ -317,23 +317,12 @@
     .locked-msg:hover { border-color: var(--red); }
 
     .locked-msg-text {
-      filter: blur(5px);
-      user-select: none;
       font-size: 0.9rem;
-      color: var(--muted);
+      color: #fff;
       line-height: 1.5;
     }
 
-    .locked-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
+    .locked-overlay { display: none; }
 
     .tier-badge {
       display: inline-flex;
