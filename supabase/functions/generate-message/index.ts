@@ -47,7 +47,6 @@ Absurd/chaos:
 • "Mam do Ciebie jedno głupie pytanie i trochę się wstydzę że je zadaję."
 
 Mind games:
-• "Zgadnij, o czym teraz myślę"
 • "Napisz mi coś, co myślisz, że chcę usłyszeć"
 • "Co jest jedną rzeczą, którą myślisz o mnie, ale mi nie mówisz?"
 • "Opisz mnie w 3 słowach — bez zastanawiania się"
@@ -64,7 +63,7 @@ Spicy:
 • "Bądź szczery — co jest moją najbardziej irytującą cechą?"`
 
     const tierContext = {
-      soft: `Poziom: Soft — lekkie, playful, trochę flirciarski conversation starter. Ton: zabawny lub intrygujący, NIE melancholijny, NIE głęboki emocjonalnie. Wiadomość ma wywołać uśmiech i chęć odpowiedzi. ZAKAZ: "Właśnie pomyślałam", "brakuje mi Cię", "widzę w Tobie", wszelkie smutne/tęskniące frazy. Przykłady stylu (nie kopiuj): "Uważaj — zaczynam Cię rozgryźć.", "Masz 3 sekundy żeby zgadnąć o czym myślę.", "Powiem Ci coś ale tylko jeśli zapytasz ładnie."`,
+      soft: `Poziom: Soft — lekki flirt, playful, conversation starter który wywołuje uśmiech i natychmiastową chęć odpowiedzi. Ton: pewny siebie, trochę prowokacyjny, NIE sentymentalny. ABSOLUTNY ZAKAZ: "Właśnie pomyślałam/em", "Masz X sekund", "zgadnij", "brakuje mi", "widzę w Tobie". Nie zadawaj pytań wprost — buduj napięcie przez niedopowiedzenie lub lekką prowokację.`,
       spicy: `Poziom: Spicy — suggestive, napięcie seksualne, niedopowiedzenie. Odważne ale bez wulgaryzmów. Partner powinien się lekko zaczerwienić lub uśmiechnąć. Przykład: "Muszę Ci coś powiedzieć… ale chyba poczekam do wieczora 😈"`,
       chaos: `Poziom: Chaos — funny, absurdalne, zaskakujące. Cel: rozbawić lub sprawić że partner nie wie czy płakać czy się śmiać. Humor > napięcie. ZAKAZ: "gdybyśmy byli", "gdybym była", wszelkie porównania do filmów/jedzenia/zwierząt. Bądź oryginalny — chaos to nieoczekiwany zwrot, nie quiz.`
     }
