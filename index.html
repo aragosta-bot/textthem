@@ -273,6 +273,24 @@
       margin-bottom: 16px;
     }
 
+    .tier-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .action-btn-sm {
+      flex: 1;
+      padding: 8px 6px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .action-btn-sm:hover { background: #2a2a2a; }
+
     .action-btn {
       flex: 1;
       display: flex;
@@ -709,15 +727,25 @@
 
     <div class="locked-messages">
       <!-- SPICY -->
-      <div class="locked-msg" onclick="generateTier('spicy')" style="cursor:pointer">
+      <div class="locked-msg">
         <span class="tier-badge tier-spicy">🌶 Spicy</span>
-        <div class="locked-msg-text" id="spicy-preview">Kliknij żeby wygenerować 🌶</div>
+        <div class="locked-msg-text" id="spicy-preview" onclick="generateTier('spicy')" style="cursor:pointer">Kliknij żeby wygenerować 🌶</div>
+        <div class="tier-actions" id="spicy-actions" style="display:none">
+          <button class="action-btn-sm" onclick="copyTier('spicy')">📋 Kopiuj</button>
+          <button class="action-btn-sm" onclick="shareTier('spicy')">📱 Wyślij</button>
+          <button class="action-btn-sm" onclick="generateTier('spicy')">🔄 Inna</button>
+        </div>
       </div>
 
       <!-- CHAOS -->
-      <div class="locked-msg" onclick="generateTier('chaos')" style="cursor:pointer">
+      <div class="locked-msg">
         <span class="tier-badge tier-chaos">🔥 Chaos</span>
-        <div class="locked-msg-text" id="chaos-preview">Kliknij żeby wygenerować 🔥</div>
+        <div class="locked-msg-text" id="chaos-preview" onclick="generateTier('chaos')" style="cursor:pointer">Kliknij żeby wygenerować 🔥</div>
+        <div class="tier-actions" id="chaos-actions" style="display:none">
+          <button class="action-btn-sm" onclick="copyTier('chaos')">📋 Kopiuj</button>
+          <button class="action-btn-sm" onclick="shareTier('chaos')">📱 Wyślij</button>
+          <button class="action-btn-sm" onclick="generateTier('chaos')">🔄 Inna</button>
+        </div>
       </div>
     </div>
   </div>
@@ -977,9 +1005,35 @@ async function generateTier(tier) {
       body: JSON.stringify({ input1, input2, input3, tier })
     })
     const data = await res.json()
-    el.textContent = data.message || 'Spróbuj jeszcze raz 😈'
+    const msg = data.message || 'Spróbuj jeszcze raz 😈'
+    el.textContent = msg
+    el.style.cursor = 'default'
+    // Show action buttons
+    const actionsEl = document.getElementById(`${tier}-actions`)
+    if (actionsEl) actionsEl.style.display = 'flex'
   } catch {
     el.textContent = 'Błąd — spróbuj jeszcze raz'
+  }
+}
+
+function copyTier(tier) {
+  const el = document.getElementById(`${tier}-preview`)
+  if (!el || !el.textContent || el.textContent.includes('generuję') || el.textContent.includes('Kliknij')) return
+  navigator.clipboard.writeText(el.textContent)
+  const btn = event.target
+  const orig = btn.textContent
+  btn.textContent = '✓ Skopiowano!'
+  setTimeout(() => btn.textContent = orig, 2000)
+}
+
+function shareTier(tier) {
+  const el = document.getElementById(`${tier}-preview`)
+  if (!el || !el.textContent) return
+  if (navigator.share) {
+    navigator.share({ text: el.textContent })
+  } else {
+    navigator.clipboard.writeText(el.textContent)
+    alert('Wiadomość skopiowana!')
   }
 }
 
