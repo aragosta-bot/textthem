@@ -816,13 +816,14 @@ function goTo(screenName) {
 }
 
 // ── GENERATE ──────────────────────────────────────
-function generate() {
-  const msgs = MESSAGES.soft;
-  // Pick next message (rotate so you don't get same twice)
-  softIndex = (softIndex + 1) % msgs.length;
-  currentMsg = msgs[softIndex];
+async function generate(tier = 'soft') {
+  const input1 = document.getElementById('input1').value
+  const input2 = document.getElementById('input2').value
+  const input3 = document.getElementById('input3').value
 
-  document.getElementById('result-text').textContent = currentMsg;
+  // Show result screen with loading state
+  goTo('result');
+  showLoading();
 
   // Pick random previews for locked tiers
   const spicyPrev = pick(MESSAGES.spicy);
@@ -830,7 +831,43 @@ function generate() {
   document.getElementById('spicy-preview').textContent = spicyPrev;
   document.getElementById('chaos-preview').textContent  = chaosPrev;
 
-  goTo('result');
+  try {
+    const SUPABASE_URL = 'https://arjmslnpxbxpxmyuoaot.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFyam1zbG5weGJ4cHhteXVvYW90Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5OTU5ODAsImV4cCI6MjA4OTU3MTk4MH0.cMVyzL4MrXIz-6oDleraWbH6fVXYHi9luXcX7sAX_AA'
+
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/generate-message`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      },
+      body: JSON.stringify({ input1, input2, input3, tier })
+    })
+
+    const data = await response.json()
+
+    if (data.message) {
+      currentMsg = data.message;
+      document.getElementById('result-text').textContent = currentMsg;
+    } else {
+      displayFallback(tier);
+    }
+  } catch (error) {
+    displayFallback(tier);
+  }
+}
+
+function showLoading() {
+  document.getElementById('result-text').textContent = '✨ generuję...';
+  currentMsg = '';
+}
+
+function displayFallback(tier = 'soft') {
+  const msgs = MESSAGES[tier] || MESSAGES.soft;
+  softIndex = (softIndex + 1) % msgs.length;
+  currentMsg = msgs[softIndex];
+  document.getElementById('result-text').textContent = currentMsg;
 }
 
 function pick(arr) {
