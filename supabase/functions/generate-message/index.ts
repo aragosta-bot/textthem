@@ -37,10 +37,12 @@ Zasady:
 
     const prompt = `${tierContext[tier as keyof typeof tierContext] || tierContext.soft}
 
-Kontekst o partnerze (użyj tego żeby spersonalizować wiadomość):
-- Jak reaguje gdy go/ją ignorujesz: ${input1 || 'nieznane'}
-- Czego się od Ciebie spodziewa: ${input2 || 'nieznane'}
-- Vibe waszego związku: ${input3 || 'nieznane'}
+WAŻNE — wiadomość MUSI być oparta na tych konkretnych informacjach:
+- Jak partner reaguje gdy go/ją ignorujesz: "${input1 || 'nieznane'}" → wykorzystaj to w wiadomości
+- Czego partner się od Ciebie spodziewa: "${input2 || 'nieznane'}" → odwróć lub zagraj z tym oczekiwaniem
+- Vibe waszego związku: "${input3 || 'nieznane'}" → oddaj to w tonie wiadomości
+
+Wiadomość powinna brzmieć jakby ją napisał ktoś kto NAPRAWDĘ zna tego partnera. Nie może być generyczna.
 
 Napisz jedną wiadomość po polsku. Tylko wiadomość — bez cudzysłowów, bez wyjaśnień.`
 
