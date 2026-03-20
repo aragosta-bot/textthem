@@ -65,8 +65,8 @@ Spicy:
 
     const tierContext = {
       soft: `Poziom: Soft — lekkie napięcie, ciekawość, tajemniczość. Wiadomość ma zatrzymać uwagę i wywołać chęć odpowiedzi. ZAKAZ używania zwrotów: "Właśnie pomyślałam", "Mam do Ciebie jedną myśl", "Pomyślałam o Tobie". Bądź kreatywna — zaskocz.`,
-      spicy: `Poziom: Spicy — napięcie, prowokacja, niedopowiedzenie. Wywołuje reakcję i chęć odpisania natychmiast. Przykład: "Muszę Ci coś powiedzieć… ale chyba poczekam do wieczora 😈"`,
-      chaos: `Poziom: Chaos — psychologiczna gra, odwrócenie sytuacji, coś nieoczekiwanego. Partner nie wie jak zareagować. Unikaj "Powiedz szczerze" — to zbyt przewidywalne.`
+      spicy: `Poziom: Spicy — suggestive, napięcie seksualne, niedopowiedzenie. Odważne ale bez wulgaryzmów. Partner powinien się lekko zaczerwienić lub uśmiechnąć. Przykład: "Muszę Ci coś powiedzieć… ale chyba poczekam do wieczora 😈"`,
+      chaos: `Poziom: Chaos — funny, absurdalne, zaskakujące. Cel: rozbawić lub sprawić że partner nie wie czy płakać czy się śmiać. Humor > napięcie. Unikaj "Powiedz szczerze".`
     }
 
     const vibeMap: Record<string, string> = {
