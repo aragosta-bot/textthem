@@ -64,7 +64,7 @@ Spicy:
 • "Bądź szczery — co jest moją najbardziej irytującą cechą?"`
 
     const tierContext = {
-      soft: `Poziom: Soft — lekkie napięcie, ciekawość, tajemniczość. Wiadomość ma zatrzymać uwagę i wywołać chęć odpowiedzi. ZAKAZ używania zwrotów: "Właśnie pomyślałam", "Mam do Ciebie jedną myśl", "Pomyślałam o Tobie". Bądź kreatywna — zaskocz.`,
+      soft: `Poziom: Soft — odwrócenie ról z ładunkiem emocjonalnym. Nadawca sygnalizuje że widzi partnera głębiej niż partner myśli, lub że coś odkrył/odkryła o sobie przez partnera. Partner powinien poczuć się jednocześnie widziany i niepewny — i chcieć natychmiast zapytać "co masz na myśli?". ZAKAZ: "Właśnie pomyślałam", "Mam do Ciebie jedną myśl", "brakuje mi Cię". Przykłady stylu (nie kopiuj): "Ostatnio obserwuję Cię bardziej niż powinnam.", "Uważaj — zaczynam Cię rozgryźć.", "Coś mi mówi że wiesz że o Tobie myślę. I specjalnie nic nie piszesz."`,
       spicy: `Poziom: Spicy — suggestive, napięcie seksualne, niedopowiedzenie. Odważne ale bez wulgaryzmów. Partner powinien się lekko zaczerwienić lub uśmiechnąć. Przykład: "Muszę Ci coś powiedzieć… ale chyba poczekam do wieczora 😈"`,
       chaos: `Poziom: Chaos — funny, absurdalne, zaskakujące. Cel: rozbawić lub sprawić że partner nie wie czy płakać czy się śmiać. Humor > napięcie. Unikaj "Powiedz szczerze".`
     }
