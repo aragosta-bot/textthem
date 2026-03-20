@@ -59,7 +59,7 @@ Napisz jedną wiadomość po polsku. Tylko wiadomość — bez cudzysłowów, be
           { role: 'user', content: prompt }
         ],
         max_completion_tokens: 100,
-        temperature: 1.1,
+        temperature: 1.3,
       }),
     })
 
