@@ -25,12 +25,14 @@ ZASADY ABSOLUTNE:
 - Pisz jak człowiek, nie jak AI
 - Żadnych emoji na końcu zdania tłumaczących żart
 
-DOBRE przykłady (ucz się tej długości i stylu):
+DOBRE przykłady (ucz się tej długości i stylu, NIE kopiuj):
 - "Muszę Ci coś powiedzieć."
 - "Zgadnij, o czym teraz myślę."
-- "Powiedz szczerze — jaka jest jedna rzecz, której ode mnie potrzebujesz?"
 - "Właśnie pomyślałam o Tobie coś, czego Ci nie powiem."
 - "Nie odpisuj przez 10 minut."
+- "Właśnie zrobiłam coś, o czym Ci nie powiem."
+- "Czekam."
+- "Wiesz co? Nieważne."
 
 ZŁE przykłady (nigdy tak):
 - "Nie odpisywałam chwilę i pewnie już masz gotowe 5 wiadomości..." ← za długie, za wyjaśniające
@@ -39,7 +41,7 @@ ZŁE przykłady (nigdy tak):
     const tierContext = {
       soft: `Poziom: Soft — lekkie napięcie, ciekawość, tajemniczość. Można wysłać mamie na urodziny (prawie). Przykład: "Właśnie pomyślałam o Tobie coś miłego… ale nie powiem 😌"`,
       spicy: `Poziom: Spicy — napięcie, prowokacja, niedopowiedzenie. Wywołuje reakcję i chęć odpisania natychmiast. Przykład: "Muszę Ci coś powiedzieć… ale chyba poczekam do wieczora 😈"`,
-      chaos: `Poziom: Chaos — psychologiczna gra, lekki mind game, odwrócenie sytuacji. Partner nie wie czy się śmiać czy denerwować. Przykład: "Powiedz szczerze — jaka jest jedna rzecz którą robimy źle jako para? Możesz być brutalnie szczery/a 👀"`
+      chaos: `Poziom: Chaos — psychologiczna gra, odwrócenie sytuacji, coś nieoczekiwanego. Partner nie wie jak zareagować. Unikaj "Powiedz szczerze" — to zbyt przewidywalne.`
     }
 
     const context = [
