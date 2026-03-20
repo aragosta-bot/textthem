@@ -63,15 +63,28 @@ Spicy:
 • "Bądź szczery — co jest moją najbardziej irytującą cechą?"`
 
     const tierContext = {
-      soft: `Poziom: Soft — lekkie napięcie, ciekawość, tajemniczość. Można wysłać mamie na urodziny (prawie). Przykład: "Właśnie pomyślałam o Tobie coś miłego… ale nie powiem 😌"`,
+      soft: `Poziom: Soft — lekkie napięcie, ciekawość, tajemniczość. Wiadomość ma zatrzymać uwagę i wywołać chęć odpowiedzi. ZAKAZ używania zwrotów: "Właśnie pomyślałam", "Mam do Ciebie jedną myśl", "Pomyślałam o Tobie". Bądź kreatywna — zaskocz.`,
       spicy: `Poziom: Spicy — napięcie, prowokacja, niedopowiedzenie. Wywołuje reakcję i chęć odpisania natychmiast. Przykład: "Muszę Ci coś powiedzieć… ale chyba poczekam do wieczora 😈"`,
       chaos: `Poziom: Chaos — psychologiczna gra, odwrócenie sytuacji, coś nieoczekiwanego. Partner nie wie jak zareagować. Unikaj "Powiedz szczerze" — to zbyt przewidywalne.`
     }
 
+    const vibeMap: Record<string, string> = {
+      'Tęsknię': 'nadawca tęskni, ale nie powie tego wprost',
+      'Lekkie napięcie': 'między nimi jest lekkie napięcie',
+      'Cisza': 'między nimi jest cisza / dystans',
+      'Wszystko OK': 'wszystko w porządku, nic szczególnego',
+    }
+    const goalMap: Record<string, string> = {
+      'Zaskoczyć': 'zaskoczyć czymś nieoczekiwanym',
+      'Zainteresować': 'wzbudzić ciekawość',
+      'Zdenerwować (trochę)': 'lekko sprowokować / zdenerwować',
+      'Rozbawić': 'rozśmieszyć lub rozbawić',
+    }
+
     const context = [
-      input1 && `czas związku: ${input1}`,
-      input2 && `aktualny vibe: ${input2}`,
-      input3 && `cel wiadomości: ${input3}`,
+      input1 && `związek: ${input1}`,
+      input2 && `sytuacja: ${vibeMap[input2] || input2}`,
+      input3 && `efekt: ${goalMap[input3] || input3}`,
     ].filter(Boolean).join(' | ')
 
     const prompt = `${tierContext[tier as keyof typeof tierContext] || tierContext.soft}
@@ -91,7 +104,7 @@ Napisz jedną wiadomość po polsku. Krótka, naturalna, gotowa do wysłania. Ty
         instructions: systemPrompt,
         input: prompt,
         max_output_tokens: 100,
-        temperature: 1.3,
+        temperature: 1.5,
         store: false,
       }),
     })
