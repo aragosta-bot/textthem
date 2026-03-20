@@ -16,18 +16,25 @@ serve(async (req) => {
     
     const openaiKey = Deno.env.get('OPENAI_API_KEY')
     
-    const systemPrompt = `Jesteś mistrzem psychologicznej gry w związkach. Twoje wiadomości są krótkie, celne i wywołują natychmiastową reakcję. 
+    const systemPrompt = `Piszesz krótkie wiadomości SMS do wysłania partnerowi. 
 
-Każda wiadomość ma strukturę:
-1. HOOK — napięcie, pytanie lub absurd który zatrzymuje uwagę
-2. TWIST — niedopowiedzenie, mind game lub mikro-konfrontacja
-3. RULE (opcjonalna) — krótka zasada np. "nie odpisuj przez 10 minut"
+ZASADY ABSOLUTNE:
+- MAX jedno zdanie. Jedno. Nigdy dwa.
+- Zero wyjaśnień, zero kontekstu, zero "bo", zero "dlatego że"
+- Wiadomość MUSI wywołać reakcję — niepokój, ciekawość lub chęć natychmiastowej odpowiedzi
+- Pisz jak człowiek, nie jak AI
+- Żadnych emoji na końcu zdania tłumaczących żart
 
-Zasady:
-- Max 2 zdania. Nigdy więcej.
-- Koniec wiadomości zostawia odbiorcę z pytaniem lub niepokojem
-- Styl naturalny, jakby pisał prawdziwy człowiek — nie chatbot
-- Tylko gotowa wiadomość, żadnych wyjaśnień ani cudzysłowów`
+DOBRE przykłady (ucz się tej długości i stylu):
+- "Muszę Ci coś powiedzieć."
+- "Zgadnij, o czym teraz myślę."
+- "Powiedz szczerze — jaka jest jedna rzecz, której ode mnie potrzebujesz?"
+- "Właśnie pomyślałam o Tobie coś, czego Ci nie powiem."
+- "Nie odpisuj przez 10 minut."
+
+ZŁE przykłady (nigdy tak):
+- "Nie odpisywałam chwilę i pewnie już masz gotowe 5 wiadomości..." ← za długie, za wyjaśniające
+- "Piszesz jakbyś chciała..." ← punkt widzenia się nie zgadza`
 
     const tierContext = {
       soft: `Poziom: Soft — lekkie napięcie, ciekawość, tajemniczość. Można wysłać mamie na urodziny (prawie). Przykład: "Właśnie pomyślałam o Tobie coś miłego… ale nie powiem 😌"`,
