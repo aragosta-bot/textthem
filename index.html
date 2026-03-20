@@ -669,25 +669,21 @@
     <p class="locked-label">Chcesz mocniejsze? 😈</p>
 
     <div class="locked-messages">
-      <!-- SPICY preview -->
-      <div class="locked-msg" onclick="showPaywall()">
+      <!-- SPICY -->
+      <div class="locked-msg" onclick="generateTier('spicy')" style="cursor:pointer">
         <span class="tier-badge tier-spicy">🌶 Spicy</span>
-        <div class="locked-msg-text" id="spicy-preview">Napisz do mnie "przepraszam" zanim pójdziesz spać. Nawet jeśli nie wiesz za co. Zobaczysz dlaczego.</div>
-        <div class="locked-overlay">🔒 Odblokuj · Spicy</div>
+        <div class="locked-msg-text" id="spicy-preview">Kliknij żeby wygenerować 🌶</div>
       </div>
 
-      <!-- CHAOS preview -->
-      <div class="locked-msg" onclick="showPaywall()">
+      <!-- CHAOS -->
+      <div class="locked-msg" onclick="generateTier('chaos')" style="cursor:pointer">
         <span class="tier-badge tier-chaos">🔥 Chaos</span>
-        <div class="locked-msg-text" id="chaos-preview">Zrób mi test: napisz coś i poczekaj 10 minut. Sprawdź czy wytrzymasz.</div>
-        <div class="locked-overlay">🔒 Odblokuj · Chaos</div>
+        <div class="locked-msg-text" id="chaos-preview">Kliknij żeby wygenerować 🔥</div>
       </div>
     </div>
   </div>
 
-  <div class="unlock-cta">
-    <button onclick="showPaywall()">🔥 Odblokuj wszystkie wiadomości</button>
-  </div>
+  <div class="unlock-cta" style="display:none"></div>
 
   <p class="disclaimer">Uwaga: wysyłasz na własną odpowiedzialność 😈</p>
 </section>
@@ -905,6 +901,29 @@ async function shareMsg() {
 }
 
 // ── PAYWALL ───────────────────────────────────────
+async function generateTier(tier) {
+  const previewId = tier === 'spicy' ? 'spicy-preview' : 'chaos-preview'
+  const el = document.getElementById(previewId)
+  if (!el) return
+  el.textContent = '✨ generuję...'
+  try {
+    const SUPABASE_URL = 'https://arjmslnpxbxpxmyuoaot.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFyam1zbG5weGJ4cHhteXVvYW90Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5OTU5ODAsImV4cCI6MjA4OTU3MTk4MH0.cMVyzL4MrXIz-6oDleraWbH6fVXYHi9luXcX7sAX_AA'
+    const input1 = document.getElementById('input1')?.value || ''
+    const input2 = document.getElementById('input2')?.value || ''
+    const input3 = document.getElementById('input3')?.value || ''
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/generate-message`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ input1, input2, input3, tier })
+    })
+    const data = await res.json()
+    el.textContent = data.message || 'Spróbuj jeszcze raz 😈'
+  } catch {
+    el.textContent = 'Błąd — spróbuj jeszcze raz'
+  }
+}
+
 function showPaywall() {
   document.getElementById('paywall-overlay').classList.add('active');
 }
