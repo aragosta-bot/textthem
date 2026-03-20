@@ -697,7 +697,7 @@
       <span class="action-icon">📱</span>
       <span>Wyślij</span>
     </button>
-    <button class="action-btn" onclick="generate()">
+    <button class="action-btn" onclick="generateSoftOnly()">
       <span class="action-icon">🔄</span>
       <span>Inna</span>
     </button>
@@ -867,7 +867,11 @@ function goTo(screenName) {
 }
 
 // ── GENERATE ──────────────────────────────────────
-async function generate(tier = 'soft') {
+async function generateSoftOnly() {
+  await generate('soft', true)
+}
+
+async function generate(tier = 'soft', softOnly = false) {
   const input1 = chipState.q1 || 'nieznane'
   const input2 = chipState.q2 || ''
   const input3 = chipState.q3 || ''
@@ -876,11 +880,11 @@ async function generate(tier = 'soft') {
   goTo('result');
   showLoading();
 
-  // Pick random previews for locked tiers
-  const spicyPrev = pick(MESSAGES.spicy);
-  const chaosPrev  = pick(MESSAGES.chaos);
-  document.getElementById('spicy-preview').textContent = spicyPrev;
-  document.getElementById('chaos-preview').textContent  = chaosPrev;
+  // Reset spicy/chaos previews only on first generate, not on "Inna"
+  if (!softOnly) {
+    document.getElementById('spicy-preview').textContent = 'Kliknij żeby wygenerować 🌶';
+    document.getElementById('chaos-preview').textContent  = 'Kliknij żeby wygenerować 🔥';
+  }
 
   try {
     const SUPABASE_URL = 'https://arjmslnpxbxpxmyuoaot.supabase.co'
