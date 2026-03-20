@@ -9,7 +9,7 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    const { input1, input2, input3, tier } = await req.json()
+    const { gender, input1, input2, input3, tier } = await req.json()
     
     // Rate limiting via IP (simple, stored in memory - good enough for MVP)
     const ip = req.headers.get('x-forwarded-for') || 'unknown'
@@ -82,7 +82,12 @@ Spicy:
       'Rozbawić': 'rozśmieszyć lub rozbawić',
     }
 
+    const genderCtx = gender === 'mężczyzna'
+      ? 'Nadawca to MĘŻCZYZNA — używaj form męskich: "pomyślałem", "zrozumiałem", "widziałem"'
+      : 'Nadawca to KOBIETA — używaj form żeńskich: "pomyślałam", "zrozumiałam", "widziałam"'
+
     const context = [
+      genderCtx,
       input1 && `związek: ${input1}`,
       input2 && `sytuacja: ${vibeMap[input2] || input2}`,
       input3 && `efekt: ${goalMap[input3] || input3}`,

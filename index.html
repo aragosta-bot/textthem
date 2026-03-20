@@ -644,6 +644,15 @@
 
   <h2>O kim piszemy? 😈</h2>
 
+  <!-- Q0: płeć nadawcy (required) -->
+  <div class="chip-group">
+    <span class="chip-label">Piszesz jako…</span>
+    <div class="chip-row" id="chips-q0">
+      <button class="chip" data-group="q0" data-value="kobieta" onclick="selectChip(this)">👩 Kobieta</button>
+      <button class="chip" data-group="q0" data-value="mężczyzna" onclick="selectChip(this)">👨 Mężczyzna</button>
+    </div>
+  </div>
+
   <!-- Q1: czas związku (optional) -->
   <div class="chip-group">
     <span class="chip-label">Jak długo jesteście razem? <span class="optional-badge">(opcjonalne)</span></span>
@@ -870,7 +879,7 @@ const MESSAGES = {
 // ── STATE ─────────────────────────────────────────
 let currentMsg = '';
 let softIndex = 0;
-const chipState = { q1: null, q2: null, q3: null };
+const chipState = { q0: null, q1: null, q2: null, q3: null };
 
 // ── CHIP LOGIC ────────────────────────────────────
 function selectChip(el) {
@@ -884,7 +893,7 @@ function selectChip(el) {
 
 function updateGenerateBtn() {
   const btn = document.getElementById('generate-btn');
-  if (btn) btn.disabled = !(chipState.q2 && chipState.q3);
+  if (btn) btn.disabled = !(chipState.q0 && chipState.q2 && chipState.q3);
 }
 
 // ── NAVIGATION ────────────────────────────────────
@@ -900,6 +909,7 @@ async function generateSoftOnly() {
 }
 
 async function generate(tier = 'soft', softOnly = false) {
+  const gender = chipState.q0 || 'kobieta'
   const input1 = chipState.q1 || 'nieznane'
   const input2 = chipState.q2 || ''
   const input3 = chipState.q3 || ''
@@ -925,7 +935,7 @@ async function generate(tier = 'soft', softOnly = false) {
         'apikey': SUPABASE_ANON_KEY,
         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
       },
-      body: JSON.stringify({ input1, input2, input3, tier })
+      body: JSON.stringify({ gender, input1, input2, input3, tier })
     })
 
     const data = await response.json()
@@ -996,13 +1006,14 @@ async function generateTier(tier) {
   try {
     const SUPABASE_URL = 'https://arjmslnpxbxpxmyuoaot.supabase.co'
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFyam1zbG5weGJ4cHhteXVvYW90Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5OTU5ODAsImV4cCI6MjA4OTU3MTk4MH0.cMVyzL4MrXIz-6oDleraWbH6fVXYHi9luXcX7sAX_AA'
-    const input1 = chipState.q1 || 'nieznane'
+    const gender = chipState.q0 || 'kobieta'
+  const input1 = chipState.q1 || 'nieznane'
     const input2 = chipState.q2 || ''
     const input3 = chipState.q3 || ''
     const res = await fetch(`${SUPABASE_URL}/functions/v1/generate-message`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({ input1, input2, input3, tier })
+      body: JSON.stringify({ gender, input1, input2, input3, tier })
     })
     const data = await res.json()
     const msg = data.message || 'Spróbuj jeszcze raz 😈'
