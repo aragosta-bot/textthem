@@ -16,20 +16,33 @@ serve(async (req) => {
     
     const openaiKey = Deno.env.get('OPENAI_API_KEY')
     
-    const tierPrompts = {
-      soft: 'Napisz jedną krótką, zagadkową wiadomość (1-2 zdania) do wysłania partnerowi. Styl: delikatne napięcie, ciekawość, lekka tajemniczość. NIE wulgarne. Tylko wiadomość, bez komentarza.',
-      spicy: 'Napisz jedną krótką wiadomość (1-2 zdania) do wysłania partnerowi. Styl: napięcie seksualne, prowokacja, niedopowiedzenie. Odważne ale bez wulgaryzmów. Tylko wiadomość, bez komentarza.',
-      chaos: 'Napisz jedną krótką wiadomość (1-2 zdania) do wysłania partnerowi. Styl: psychologiczna gra, lekki mind game, coś co sprawi że partner nie będzie wiedział jak zareagować. Tylko wiadomość, bez komentarza.'
+    const systemPrompt = `Jesteś mistrzem psychologicznej gry w związkach. Twoje wiadomości są krótkie, celne i wywołują natychmiastową reakcję. 
+
+Każda wiadomość ma strukturę:
+1. HOOK — napięcie, pytanie lub absurd który zatrzymuje uwagę
+2. TWIST — niedopowiedzenie, mind game lub mikro-konfrontacja
+3. RULE (opcjonalna) — krótka zasada np. "nie odpisuj przez 10 minut"
+
+Zasady:
+- Max 2 zdania. Nigdy więcej.
+- Koniec wiadomości zostawia odbiorcę z pytaniem lub niepokojem
+- Styl naturalny, jakby pisał prawdziwy człowiek — nie chatbot
+- Tylko gotowa wiadomość, żadnych wyjaśnień ani cudzysłowów`
+
+    const tierContext = {
+      soft: `Poziom: Soft — lekkie napięcie, ciekawość, tajemniczość. Można wysłać mamie na urodziny (prawie). Przykład: "Właśnie pomyślałam o Tobie coś miłego… ale nie powiem 😌"`,
+      spicy: `Poziom: Spicy — napięcie, prowokacja, niedopowiedzenie. Wywołuje reakcję i chęć odpisania natychmiast. Przykład: "Muszę Ci coś powiedzieć… ale chyba poczekam do wieczora 😈"`,
+      chaos: `Poziom: Chaos — psychologiczna gra, lekki mind game, odwrócenie sytuacji. Partner nie wie czy się śmiać czy denerwować. Przykład: "Powiedz szczerze — jaka jest jedna rzecz którą robimy źle jako para? Możesz być brutalnie szczery/a 👀"`
     }
 
-    const prompt = `Kontekst o partnerze:
+    const prompt = `${tierContext[tier as keyof typeof tierContext] || tierContext.soft}
+
+Kontekst o partnerze (użyj tego żeby spersonalizować wiadomość):
 - Jak reaguje gdy go/ją ignorujesz: ${input1 || 'nieznane'}
-- Czego się od Ciebie spodziewa: ${input2 || 'nieznane'}  
+- Czego się od Ciebie spodziewa: ${input2 || 'nieznane'}
 - Vibe waszego związku: ${input3 || 'nieznane'}
 
-${tierPrompts[tier as keyof typeof tierPrompts] || tierPrompts.soft}
-
-Ważne: wiadomość powinna być po polsku, krótka, gotowa do wysłania.`
+Napisz jedną wiadomość po polsku. Tylko wiadomość — bez cudzysłowów, bez wyjaśnień.`
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -39,9 +52,12 @@ Ważne: wiadomość powinna być po polsku, krótka, gotowa do wysłania.`
       },
       body: JSON.stringify({
         model: "gpt-5.4-mini",
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 150,
-        temperature: 0.9,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: prompt }
+        ],
+        max_tokens: 100,
+        temperature: 1.1,
       }),
     })
 
