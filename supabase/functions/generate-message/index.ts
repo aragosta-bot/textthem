@@ -53,12 +53,12 @@ Napisz jedną wiadomość po polsku. Tylko wiadomość — bez cudzysłowów, be
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: "gpt-5.4-mini",
+        model: "gpt-5.4-mini-2026-03-17",
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: prompt }
         ],
-        max_tokens: 100,
+        max_completion_tokens: 100,
         temperature: 1.1,
       }),
     })
