@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Nie wiesz co napisać? Powiedz nam 2 rzeczy o nim/niej — damy Ci wiadomość, której się nie spodziewa 😈">
+  <meta property="og:title" content="TextThem 😈 — Wiadomość, której się nie spodziewał">
+  <meta property="og:description" content="Generuj spicy wiadomości dla swojej połówki. Za darmo. Za darmo.">
+  <meta property="og:type" content="website">
+  <title>TextThem 😈</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #dc2626;
+      --red-dark: #b91c1c;
+      --red-glow: rgba(220,38,38,0.35);
+      --pink: #f472b6;
+      --orange: #fb923c;
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #f5f5f5;
+      --muted: #888;
+      --bubble-bg: #1e1e1e;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+      min-height: 100dvh;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px 40px;
+      position: relative;
+      animation: fadeIn 0.4s ease;
+    }
+    .screen.active { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── PROGRESS DOTS ── */
+    .dots {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background 0.3s, transform 0.3s;
+    }
+    .dot.active {
+      background: var(--red);
+      transform: scale(1.25);
+    }
+    .dot.done { background: var(--muted); }
+
+    /* ── BACK BUTTON ── */
+    .back-btn {
+      position: absolute;
+      top: 20px; left: 20px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .back-btn:hover { color: var(--text); }
+
+    /* ── TYPOGRAPHY ── */
+    h1 {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(2.2rem, 8vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      text-align: center;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 3vw, 1.1rem);
+      max-width: 360px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 0 24px var(--red-glow);
+    }
+    .btn-primary:hover {
+      background: var(--red-dark);
+      box-shadow: 0 0 36px var(--red-glow);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: var(--surface);
+      border-color: var(--muted);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      padding: 12px 20px;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+
+    /* ── INPUTS ── */
+    .input-group {
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 16px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .input-field {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      resize: none;
+    }
+    .input-field::placeholder { color: #555; }
+    .input-field:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(220,38,38,0.15);
+    }
+
+    .optional-badge {
+      font-size: 0.75rem;
+      color: #555;
+      margin-left: 6px;
+      font-weight: 400;
+    }
+
+    /* ── LANDING ── */
+    .landing-emoji {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    /* ── RESULT ── */
+    .message-wrapper {
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 24px;
+      animation: bubbleIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes bubbleIn {
+      from { opacity: 0; transform: scale(0.88); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .message-bubble {
+      background: var(--red);
+      color: #fff;
+      border-radius: 20px 20px 4px 20px;
+      padding: 20px 22px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      box-shadow: 0 8px 32px rgba(220,38,38,0.3);
+      position: relative;
+    }
+    .message-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -8px; right: 16px;
+      width: 0; height: 0;
+      border-left: 10px solid transparent;
+      border-top: 10px solid var(--red);
+    }
+
+    .message-meta {
+      text-align: right;
+      margin-top: 8px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* ── ACTION BUTTONS ── */
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 16px;
+    }
+
+    .action-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn:hover { background: var(--surface); border-color: var(--muted); }
+    .action-btn .action-icon { font-size: 1.4rem; }
+
+    /* ── LOCKED MESSAGES ── */
+    .locked-section {
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 20px;
+    }
+
+    .locked-label {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .locked-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .locked-msg {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      position: relative;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .locked-msg:hover { border-color: var(--red); }
+
+    .locked-msg-text {
+      filter: blur(5px);
+      user-select: none;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .locked-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .tier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    .tier-spicy { background: rgba(251,146,60,0.2); color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
+    .tier-chaos { background: rgba(244,114,182,0.2); color: var(--pink); border: 1px solid rgba(244,114,182,0.3); }
+
+    .unlock-cta {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .unlock-cta button {
+      background: linear-gradient(135deg, var(--orange), var(--pink));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      box-shadow: 0 4px 16px rgba(251,146,60,0.3);
+    }
+    .unlock-cta button:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .disclaimer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #555;
+      margin-top: 8px;
+    }
+
+    /* ── PAYWALL OVERLAY ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+    .overlay.active { display: flex; }
+
+    .paywall-sheet {
+      background: var(--surface);
+      border-radius: 24px 24px 0 0;
+      padding: 32px 24px 48px;
+      width: 100%;
+      max-width: 480px;
+      animation: slideUp 0.35s cubic-bezier(0.34,1.2,0.64,1);
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+
+    .paywall-handle {
+      width: 40px; height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 0 auto 24px;
+    }
+
+    .paywall-title {
+      font-family: Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .paywall-subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    .plans {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .plan {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: border-color 0.2s;
+    }
+    .plan:hover { border-color: var(--red); }
+    .plan.current { border-color: var(--border); opacity: 0.6; }
+
+    .plan-info { flex: 1; }
+    .plan-name {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
+    .plan-desc { font-size: 0.8rem; color: var(--muted); }
+
+    .plan-price {
+      font-family: Georgia, serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-align: right;
+    }
+    .plan-price .currency { font-size: 0.8rem; }
+
+    .plan-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .plan-btn.free { background: var(--border); color: var(--muted); cursor: default; }
+    .plan-btn.spicy { background: var(--orange); color: #fff; }
+    .plan-btn.chaos { background: var(--pink); color: #fff; }
+    .plan-btn.spicy:hover, .plan-btn.chaos:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .paywall-close {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 8px;
+      transition: color 0.2s;
+    }
+    .paywall-close:hover { color: var(--text); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: 24px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 200;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── DECORATIVE ── */
+    .glow-line {
+      width: 60px;
+      height: 3px;
+      background: var(--red);
+      border-radius: 2px;
+      margin: 0 auto 32px;
+      box-shadow: 0 0 12px var(--red-glow);
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      text-align: center;
+      color: #444;
+      font-size: 0.75rem;
+      margin-top: 32px;
+    }
+
+    /* ── MOBILE TWEAKS ── */
+    @media (max-width: 360px) {
+      h1 { font-size: 2rem; }
+      .action-buttons { flex-wrap: wrap; }
+      .action-btn { min-width: calc(50% - 5px); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 1 — LANDING
+══════════════════════════════════════════ -->
+<section id="screen-landing" class="screen active">
+  <div class="dots">
+    <div class="dot active" id="dot-1"></div>
+    <div class="dot" id="dot-2"></div>
+    <div class="dot" id="dot-3"></div>
+  </div>
+
+  <div class="landing-emoji">😈</div>
+
+  <h1>Nie wiesz<br>co napisać?</h1>
+
+  <div class="glow-line"></div>
+
+  <p class="subtitle">
+    Powiedz nam 2 rzeczy o nim/niej — damy Ci wiadomość, której się nie spodziewa
+  </p>
+
+  <button class="btn btn-primary" onclick="goTo('input')">
+    Generuj wiadomość →
+  </button>
+
+  <div class="site-footer">TextThem · v1.0 · wysyłasz na własną odpowiedzialność 😈</div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SCREEN 2 — INPUT
+══════════════════════════════════════════ -->
+<section id="screen-input" class="screen">
+  <button class="back-btn" onclick="goTo('landing')">← Wróć</button>
+
+  <div class="dots">
+    <div class="dot done"></div>
+    <div class="dot active"></div>
+    <div class="dot"></div>
+  </div>
+
+  <h2>O kim piszemy? 😈</h2>
+
+  <div class="input-group">
+    <label class="input-label" for="input1">Jak on/ona reaguje gdy go/ją ignorujesz?</label>
+    <input
+      id="input1"
+      class="input-field"
+      type="text"
+      placeholder='np. "pisze 5 razy z rzędu"'
+      maxlength="120"
+      autocomplete="off"
+    >
+  </div>
+
+  <div class="input-group">
+    <label class="input-label" for="input2">Czego najbardziej się od Ciebie spodziewa?</label>
+    <input
+      id="input2"
+      class="input-field"
+      type="text"
+      placeholder='np. "że pierwszy/a napiszę"'
+      maxlength="120"
+      autocomplete="off"
+    >
+  </div>
+
+  <div class="input-group">
+    <label class="input-label" for="input3">
+      Jedno słowo opisujące Wasz vibe
+      <span class="optional-badge">(opcjonalne)</span>
+    </label>
+    <input
+      id="input3"
+      class="input-field"
+      type="text"
+      placeholder='np. "chaos"'
+      maxlength="40"
+      autocomplete="off"
+    >
+  </div>
+
+  <button class="btn btn-primary" onclick="generate()" style="margin-top:8px">
+    Daj mi wiadomość 😈
+  </button>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SCREEN 3 — RESULT
+══════════════════════════════════════════ -->
+<section id="screen-result" class="screen">
+  <button class="back-btn" onclick="goTo('input')">← Wróć</button>
+
+  <div class="dots">
+    <div class="dot done"></div>
+    <div class="dot done"></div>
+    <div class="dot active"></div>
+  </div>
+
+  <h2>Twoja wiadomość 💬</h2>
+
+  <!-- FREE message bubble -->
+  <div class="message-wrapper">
+    <div class="message-bubble" id="result-text">
+      <!-- filled by JS -->
+    </div>
+    <div class="message-meta">Soft tier · bezpłatna</div>
+  </div>
+
+  <!-- Action buttons -->
+  <div class="action-buttons">
+    <button class="action-btn" onclick="copyMsg()">
+      <span class="action-icon">📋</span>
+      <span id="copy-label">Kopiuj</span>
+    </button>
+    <button class="action-btn" onclick="shareMsg()">
+      <span class="action-icon">📱</span>
+      <span>Wyślij</span>
+    </button>
+    <button class="action-btn" onclick="generate()">
+      <span class="action-icon">🔄</span>
+      <span>Inna</span>
+    </button>
+  </div>
+
+  <!-- Locked SPICY messages -->
+  <div class="locked-section">
+    <p class="locked-label">Chcesz mocniejsze? 😈</p>
+
+    <div class="locked-messages">
+      <!-- SPICY preview -->
+      <div class="locked-msg" onclick="showPaywall()">
+        <span class="tier-badge tier-spicy">🌶 Spicy</span>
+        <div class="locked-msg-text" id="spicy-preview">Napisz do mnie "przepraszam" zanim pójdziesz spać. Nawet jeśli nie wiesz za co. Zobaczysz dlaczego.</div>
+        <div class="locked-overlay">🔒 Odblokuj · Spicy</div>
+      </div>
+
+      <!-- CHAOS preview -->
+      <div class="locked-msg" onclick="showPaywall()">
+        <span class="tier-badge tier-chaos">🔥 Chaos</span>
+        <div class="locked-msg-text" id="chaos-preview">Zrób mi test: napisz coś i poczekaj 10 minut. Sprawdź czy wytrzymasz.</div>
+        <div class="locked-overlay">🔒 Odblokuj · Chaos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="unlock-cta">
+    <button onclick="showPaywall()">🔥 Odblokuj wszystkie wiadomości</button>
+  </div>
+
+  <p class="disclaimer">Uwaga: wysyłasz na własną odpowiedzialność 😈</p>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     PAYWALL OVERLAY
+══════════════════════════════════════════ -->
+<div id="paywall-overlay" class="overlay" onclick="hidePaywallIfBg(event)">
+  <div class="paywall-sheet">
+    <div class="paywall-handle"></div>
+    <p class="paywall-title">Odblokuj wiadomości 🔥</p>
+    <p class="paywall-subtitle">Wybierz pakiet i uderz mocniej</p>
+
+    <div class="plans">
+      <!-- SOFT (free, current) -->
+      <div class="plan current">
+        <div class="plan-info">
+          <div class="plan-name">😌 Soft</div>
+          <div class="plan-desc">15 łagodnych wiadomości</div>
+        </div>
+        <button class="plan-btn free">Aktywny</button>
+      </div>
+
+      <!-- SPICY -->
+      <div class="plan">
+        <div class="plan-info">
+          <div class="plan-name">🌶 Spicy</div>
+          <div class="plan-desc">+15 wiadomości z napięciem</div>
+        </div>
+        <div style="text-align:right">
+          <div class="plan-price">9 <span class="currency">zł</span></div>
+          <button class="plan-btn spicy" onclick="comingSoon()">Zapłać</button>
+        </div>
+      </div>
+
+      <!-- CHAOS -->
+      <div class="plan">
+        <div class="plan-info">
+          <div class="plan-name">🔥 Chaos</div>
+          <div class="plan-desc">+15 najbardziej prowokacyjnych</div>
+        </div>
+        <div style="text-align:right">
+          <div class="plan-price">19 <span class="currency">zł</span></div>
+          <button class="plan-btn chaos" onclick="comingSoon()">Zapłać</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="paywall-close" onclick="hidePaywall()">Nie teraz</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+
+<script>
+// ── MESSAGE DATABASE ──────────────────────────────
+
+const MESSAGES = {
+  soft: [
+    "Muszę Ci coś powiedzieć… ale nie wiem czy powinnam 😌",
+    "Zgadnij, o czym teraz myślę",
+    "Właśnie pomyślałam o czymś miłym o Tobie… ale nie powiem 😌",
+    "Czy jest coś, co chciałbyś mi powiedzieć, ale się boisz?",
+    "Wyobraź sobie że jesteśmy w kinie teraz. Co byś zrobił?",
+    "Powiedz mi jedną rzecz, której jeszcze o mnie nie wiesz",
+    "Gdybyś miał opisać mnie jednym słowem swoim znajomym, jakie by to było?",
+    "Nie śpię. Myślę o głupotach. Ty?",
+    "Ostatnio mam wrażenie, że nie powiedziałam Ci czegoś ważnego",
+    "Co jest jedną rzeczą, której ode mnie potrzebujesz, a Ci tego nie daję?",
+    "Pamiętasz ten wieczór kiedy…? Właśnie o tym myślę",
+    "Mam do Ciebie jedno pytanie. Ale możesz nie odpowiadać 😌",
+    "Napisz mi coś, co sprawi że się uśmiechnę",
+    "Właśnie usłyszałam piosenkę i od razu pomyślałam o Tobie",
+    "Gdybyś mógł cofnąć jeden nasz moment żeby go przeżyć jeszcze raz — który by to był?"
+  ],
+
+  spicy: [
+    "Napisz do mnie 'przepraszam' zanim pójdziesz spać. Nawet jeśli nie wiesz za co. Zobaczysz dlaczego.",
+    "Masz 3 minuty żeby mnie przekonać, że warto na Ciebie czekać. Zaczynaj.",
+    "Ostatnio mam wrażenie, że daję więcej niż dostaję. Powiedz mi, że się mylę.",
+    "Jedno zdanie. Dlaczego ja, a nie ktoś inny?",
+    "Powiedz mi coś, czego się trochę wstydzisz, że czujesz.",
+    "Napisz mi wiadomość tak, jakby jutro miała być ostatnia szansa.",
+    "Ile czasu zajmie Ci odpisanie na tę wiadomość? Mierzę.",
+    "Wyobraź sobie, że przez 24h nie możemy rozmawiać. Co byś napisał tuż przed?",
+    "Ostatnia rzecz, o której myślałeś zanim zasnąłeś. Teraz.",
+    "Masz rację lub masz mnie. Wybierz.",
+    "Opisz mnie w 3 słowach. Ale żadne z nich nie może być 'fajna'.",
+    "Zrób mi coś miłego bez pytania dlaczego. Teraz.",
+    "Kiedy ostatnio naprawdę mnie słuchałeś? Nie mów że teraz.",
+    "Jestem zła. Masz jedną wiadomość żeby to naprawić.",
+    "Napisz mi coś, po czym nie będę mogła przestać myśleć o Tobie przez cały dzień."
+  ],
+
+  chaos: [
+    "Zrób mi test: napisz coś i poczekaj 10 minut. Sprawdź czy wytrzymasz.",
+    "Jeśli nie napiszesz do mnie w ciągu 5 minut, wyciągam własne wnioski 😈",
+    "Właśnie widziałam kogoś bardzo podobnego do Ciebie. Było nieswojo. Dobrego wieczoru.",
+    "Mój telefon się rozładowuje. Masz 2 minuty na coś ważnego.",
+    "Powiedz mi prawdę: kiedy ostatnio o mnie pomyślałeś bez mojego powodu?",
+    "Bet: nie odważysz się napisać mi tego, co naprawdę teraz czujesz.",
+    "Ignoruj tę wiadomość. Zobaczymy jak długo wytrzymasz.",
+    "Właśnie zmieniłam zdanie. O czym? Domyśl się.",
+    "Twój ruch. I niech będzie dobry.",
+    "Mam plan na dziś wieczór ale potrzebuję kogoś odważnego. Kandydaci?",
+    "Możesz mi zadać jedno pytanie na absolutnie szczerą odpowiedź. Ale tylko jedno.",
+    "Napisz mi coś, czego nigdy byś mi nie napisał na trzeźwo.",
+    "Stawiam, że za 5 minut będziesz myślał tylko o tej wiadomości.",
+    "Hej. To tylko test. Ale Twoja reakcja jest testem prawdziwym 😈",
+    "Ostatnie ostrzeżenie: przestaję być sympatyczna za 3… 2…"
+  ]
+};
+
+// ── STATE ─────────────────────────────────────────
+let currentMsg = '';
+let softIndex = 0;
+
+// ── NAVIGATION ────────────────────────────────────
+function goTo(screenName) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + screenName).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── GENERATE ──────────────────────────────────────
+function generate() {
+  const msgs = MESSAGES.soft;
+  // Pick next message (rotate so you don't get same twice)
+  softIndex = (softIndex + 1) % msgs.length;
+  currentMsg = msgs[softIndex];
+
+  document.getElementById('result-text').textContent = currentMsg;
+
+  // Pick random previews for locked tiers
+  const spicyPrev = pick(MESSAGES.spicy);
+  const chaosPrev  = pick(MESSAGES.chaos);
+  document.getElementById('spicy-preview').textContent = spicyPrev;
+  document.getElementById('chaos-preview').textContent  = chaosPrev;
+
+  goTo('result');
+}
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// ── COPY ──────────────────────────────────────────
+async function copyMsg() {
+  if (!currentMsg) return;
+  try {
+    await navigator.clipboard.writeText(currentMsg);
+    const label = document.getElementById('copy-label');
+    label.textContent = 'Skopiowano! ✓';
+    setTimeout(() => { label.textContent = 'Kopiuj'; }, 2000);
+  } catch {
+    showToast('Zaznacz i skopiuj ręcznie 😅');
+  }
+}
+
+// ── SHARE ─────────────────────────────────────────
+async function shareMsg() {
+  if (!currentMsg) return;
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'TextThem 😈',
+        text: currentMsg,
+        url: window.location.href
+      });
+    } catch { /* user cancelled */ }
+  } else {
+    await copyMsg();
+    showToast('Link skopiowany! 📋');
+  }
+}
+
+// ── PAYWALL ───────────────────────────────────────
+function showPaywall() {
+  document.getElementById('paywall-overlay').classList.add('active');
+}
+function hidePaywall() {
+  document.getElementById('paywall-overlay').classList.remove('active');
+}
+function hidePaywallIfBg(e) {
+  if (e.target === document.getElementById('paywall-overlay')) hidePaywall();
+}
+
+// ── COMING SOON ───────────────────────────────────
+function comingSoon() {
+  showToast('Wkrótce! Trzymaj się 🔥');
+}
+
+// ── TOAST ─────────────────────────────────────────
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── KEYBOARD: Enter submits ────────────────────────
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const active = document.querySelector('.screen.active');
+    if (active && active.id === 'screen-input') generate();
+  }
+});
+</script>
+</body>
+</html>
