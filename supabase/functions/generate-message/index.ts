@@ -41,10 +41,10 @@ Pytania które wchodzą za głęboko:
 • "Czy kiedykolwiek Cię wkurzam bardziej niż pokazujesz?"
 
 Absurd/chaos:
-• "Szybkie pytanie: gdybym była jedzeniem, to czym?"
 • "Na ile % jestem dziś problemem? 😌"
 • "Czy my byśmy się lubili, gdybyśmy się nie znali?"
-• "Gdybyśmy byli filmem, to raczej komedia czy dramat?"
+• "Właśnie opisałam Cię komuś i trochę przesadziłam w jedną stronę."
+• "Mam do Ciebie jedno głupie pytanie i trochę się wstydzę że je zadaję."
 
 Mind games:
 • "Zgadnij, o czym teraz myślę"
@@ -64,9 +64,9 @@ Spicy:
 • "Bądź szczery — co jest moją najbardziej irytującą cechą?"`
 
     const tierContext = {
-      soft: `Poziom: Soft — odwrócenie ról z ładunkiem emocjonalnym. Nadawca sygnalizuje że widzi partnera głębiej niż partner myśli, lub że coś odkrył/odkryła o sobie przez partnera. Partner powinien poczuć się jednocześnie widziany i niepewny — i chcieć natychmiast zapytać "co masz na myśli?". ZAKAZ: "Właśnie pomyślałam", "Mam do Ciebie jedną myśl", "brakuje mi Cię". Przykłady stylu (nie kopiuj): "Ostatnio obserwuję Cię bardziej niż powinnam.", "Uważaj — zaczynam Cię rozgryźć.", "Coś mi mówi że wiesz że o Tobie myślę. I specjalnie nic nie piszesz."`,
+      soft: `Poziom: Soft — lekkie, playful, trochę flirciarski conversation starter. Ton: zabawny lub intrygujący, NIE melancholijny, NIE głęboki emocjonalnie. Wiadomość ma wywołać uśmiech i chęć odpowiedzi. ZAKAZ: "Właśnie pomyślałam", "brakuje mi Cię", "widzę w Tobie", wszelkie smutne/tęskniące frazy. Przykłady stylu (nie kopiuj): "Uważaj — zaczynam Cię rozgryźć.", "Masz 3 sekundy żeby zgadnąć o czym myślę.", "Powiem Ci coś ale tylko jeśli zapytasz ładnie."`,
       spicy: `Poziom: Spicy — suggestive, napięcie seksualne, niedopowiedzenie. Odważne ale bez wulgaryzmów. Partner powinien się lekko zaczerwienić lub uśmiechnąć. Przykład: "Muszę Ci coś powiedzieć… ale chyba poczekam do wieczora 😈"`,
-      chaos: `Poziom: Chaos — funny, absurdalne, zaskakujące. Cel: rozbawić lub sprawić że partner nie wie czy płakać czy się śmiać. Humor > napięcie. Unikaj "Powiedz szczerze".`
+      chaos: `Poziom: Chaos — funny, absurdalne, zaskakujące. Cel: rozbawić lub sprawić że partner nie wie czy płakać czy się śmiać. Humor > napięcie. ZAKAZ: "gdybyśmy byli", "gdybym była", wszelkie porównania do filmów/jedzenia/zwierząt. Bądź oryginalny — chaos to nieoczekiwany zwrot, nie quiz.`
     }
 
     const vibeMap: Record<string, string> = {
