@@ -35,16 +35,17 @@ Zasady:
       chaos: `Poziom: Chaos — psychologiczna gra, lekki mind game, odwrócenie sytuacji. Partner nie wie czy się śmiać czy denerwować. Przykład: "Powiedz szczerze — jaka jest jedna rzecz którą robimy źle jako para? Możesz być brutalnie szczery/a 👀"`
     }
 
+    const context = [
+      input1 && `reakcja na ignorowanie: ${input1}`,
+      input2 && `oczekiwanie: ${input2}`,
+      input3 && `vibe: ${input3}`,
+    ].filter(Boolean).join(' | ')
+
     const prompt = `${tierContext[tier as keyof typeof tierContext] || tierContext.soft}
 
-WAŻNE — wiadomość MUSI być oparta na tych konkretnych informacjach:
-- Jak partner reaguje gdy go/ją ignorujesz: "${input1 || 'nieznane'}" → wykorzystaj to w wiadomości
-- Czego partner się od Ciebie spodziewa: "${input2 || 'nieznane'}" → odwróć lub zagraj z tym oczekiwaniem
-- Vibe waszego związku: "${input3 || 'nieznane'}" → oddaj to w tonie wiadomości
+${context ? `Kontekst (użyj jako inspirację, nie cytuj): ${context}` : ''}
 
-Wiadomość powinna brzmieć jakby ją napisał ktoś kto NAPRAWDĘ zna tego partnera. Nie może być generyczna.
-
-Napisz jedną wiadomość po polsku. Tylko wiadomość — bez cudzysłowów, bez wyjaśnień.`
+Napisz jedną wiadomość po polsku. Krótka, naturalna, gotowa do wysłania. Tylko wiadomość.`
 
     const response = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
